@@ -1,4 +1,4 @@
 Arduino
 =======
 
-Arduino test codes
+This contains Arduino codes for testing
