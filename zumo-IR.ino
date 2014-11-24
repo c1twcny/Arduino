@@ -1,3 +1,11 @@
+/* ************************************************************
+ *                                                            *
+ * Created by:  TWC                                           *
+ * Date:        Nov. 2014                                     *
+ * Version:     0.1.0                                         *
+ *                                                            *
+ *                                                            */
+
 #include <LSM303.h>
 #include <Wire.h>
 #include <ZumoReflectanceSensorArray.h>
