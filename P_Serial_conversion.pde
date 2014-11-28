@@ -25,6 +25,7 @@ PFont f;
 // axis parameters
 int xPosI = 20;
 int xPos  = xPosI;
+int yPosOffset = 12;
 int widthMargin = 10;
 float xAxisLength;
 
@@ -77,10 +78,15 @@ void serialEvent (Serial myPort) {
       fill(valColor[i]);
       noStroke();
       //rect(xPosI, partH*i+1, width-widthMargin, 2); // rect(X, Y, width, height)
-      text(str[i],xPosI+5, partH*i+12);
-      text("max-g", xPosI+45, partH*i+12);
-      text(max[i], xPosI+80, partH*i+12);
-      text("m/s^2", xPosI+115, partH*i+12);
+      text(str[i],xPosI+5, partH*i+yPosOffset);
+      text("max-g", xPosI+45, partH*i+yPosOffset);
+      text(max[i], xPosI+80, partH*i+yPosOffset);
+      text("m/s^2", xPosI+115, partH*i+yPosOffset);
+      fill(255);
+      rect(xPosI+160, partH*i+18, 40, -20);
+      fill(valColor[i]):
+      text(values[i], xPosI+160, partH*i+yPosOffset);
+      text("g", xPosI+195, partH*i+yPosOffset);
       
       /* zero-g line */
       rect(xPosI, partH*(i+0.5), width-widthMargin, 2);
