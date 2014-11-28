@@ -30,7 +30,7 @@ int widthMargin = 10;
 float xAxisLength;
 
 void setup() {
-  size(480,320);
+  size(540,360);
   partH = height / numValues; // "height" is set by the second parameter of the size()
   println(Serial.list());
   String portName = Serial.list()[0];
