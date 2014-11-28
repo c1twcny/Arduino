@@ -1,4 +1,4 @@
-
+/* 
 
 import processing.serial.*;
 Serial myPort;
@@ -10,7 +10,7 @@ float[] max     = new float[numValues];
 color[] valColor= new color[numValues];
 String[] str    = new String[numValues];
 float partH;
-
+PFont f;
 
 // axis parameters
 int xPosI = 20;
@@ -44,11 +44,14 @@ void setup() {
   valColor[2] = color(0, 0, 255);
   str[2] = "Z-axis";
   
+  f = createFont("Arial", 12, true);
   background(255);
 }
 
 void draw() {
   // nothing happens in draw...all happens in serialEvent()
+  textFont(f, 12);
+  
 }
 
 void serialEvent (Serial myPort) {
@@ -60,26 +63,23 @@ void serialEvent (Serial myPort) {
     values = float(splitTokens(inString, ", \t"));
     
     for (int i=0; i < numValues; i++) {
-      // maximum +2g
-      fill(0);
+      /* maximum +2g */
+      fill(valColor[i]);
       noStroke();
-      rect(xPosI, partH*i+1, width-widthMargin, 2); // rect(X, Y, width, height)
-      fill(0);
+      //rect(xPosI, partH*i+1, width-widthMargin, 2); // rect(X, Y, width, height)
       text(str[i],xPosI+5, partH*i+12);
       text("max-g", xPosI+45, partH*i+12);
       text(max[i], xPosI+80, partH*i+12);
       text("m/s^2", xPosI+115, partH*i+12);
-      // zero g line
-      fill(0);
-      rect(xPosI, partH*(i+0.5), width-widthMargin, 2);
       
-      fill(0);
-      text(str[i], xPosI+5, partH*(i+0.5)-3);
-      text("zero-g", xPosI+45, partH*(i+0.5)-3);
-      fill(0);
-      rect(xPosI, partH*(i+0.25), 2, partH*0.5);
+      /* zero-g line */
+      rect(xPosI, partH*(i+0.5), width-widthMargin, 2);
+      text("0", xPosI-10, partH*(i+0.5)+5);
+      rect(xPosI, partH*(i+0.25), 1, partH*0.5);
       rect(xPosI, partH*(i+0.25), 5, 1);
+      text("1", xPosI-10, partH*(i+0.25)+5);      
       rect(xPosI, partH*(i+0.75), 5, 1);
+      text("-1", xPosI-10, partH*(i+0.75)+5);
       
       float mappedVal = map(values[i], min[i], max[i], 0, partH);
       print(values[i]);
