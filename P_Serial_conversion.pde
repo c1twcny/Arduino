@@ -1,4 +1,14 @@
-/* 
+/*
+Author:   TWC
+Date:     Nov. 2014
+Version:  0.1.0
+
+This is the Processing file for Serial-conversion.ino. 
+This sketch will read serial outputs from Serial-conversion.ino and plots acceleration numbers (m/s^2) along X, Y & Z-axis
+on screen.
+
+Start Serial-conversion.ino first, then run P_Serial_conversion.pde sketch.
+*/
 
 import processing.serial.*;
 Serial myPort;
