@@ -1,4 +1,14 @@
-/* 
+/*
+Author:   TWC
+Date:     Nov. 2014
+Version:  0.1.0
+
+This is the Processing file for Serial-conversion.ino. 
+This sketch will read serial outputs from Serial-conversion.ino and plots acceleration numbers (m/s^2) along X, Y & Z-axis
+on screen.
+
+Start Serial-conversion.ino first, then run P_Serial_conversion.pde sketch.
+*/
 
 import processing.serial.*;
 Serial myPort;
@@ -15,11 +25,12 @@ PFont f;
 // axis parameters
 int xPosI = 20;
 int xPos  = xPosI;
+int yPosOffset = 12;
 int widthMargin = 10;
 float xAxisLength;
 
 void setup() {
-  size(480,320);
+  size(540,360);
   partH = height / numValues; // "height" is set by the second parameter of the size()
   println(Serial.list());
   String portName = Serial.list()[0];
@@ -67,10 +78,15 @@ void serialEvent (Serial myPort) {
       fill(valColor[i]);
       noStroke();
       //rect(xPosI, partH*i+1, width-widthMargin, 2); // rect(X, Y, width, height)
-      text(str[i],xPosI+5, partH*i+12);
-      text("max-g", xPosI+45, partH*i+12);
-      text(max[i], xPosI+80, partH*i+12);
-      text("m/s^2", xPosI+115, partH*i+12);
+      text(str[i],xPosI+5, partH*i+yPosOffset);
+      text("max-g", xPosI+45, partH*i+yPosOffset);
+      text(max[i], xPosI+80, partH*i+yPosOffset);
+      text("m/s^2", xPosI+115, partH*i+yPosOffset);
+      fill(255);
+      rect(xPosI+160, partH*i+18, 40, -20);
+      fill(valColor[i]):
+      text(values[i], xPosI+160, partH*i+yPosOffset);
+      text("g", xPosI+195, partH*i+yPosOffset);
       
       /* zero-g line */
       rect(xPosI, partH*(i+0.5), width-widthMargin, 2);
