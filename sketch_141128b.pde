@@ -10,6 +10,11 @@ from Sharp IR sensor (GP2Y0A02YK)
 
 Note:
 (1) Sharp GP2Y0A02YK detection distance: 20 cm ~ 150 cm.
+(2) tarray[0] -> X-axis acceleration
+    tarray[1] -> Y-axis acceleration
+    tarray[2] -> Z-axis acceleration
+    tarray[3] -> magnetic heading
+    tarray[4] -> IR distance measurement
 *******************************************************************************************/
 
 import processing.serial.*;
@@ -57,8 +62,6 @@ float scaling100 = 0.5;  // 100.0/200.0
 float scaling050 = 0.25; // 50.0/200.0
 float deltaXIR = diameterIRPanel*0.5*cos(radians(30.0));
 float deltaYIR = diameterIRPanel*0.5*sin(radians(30.0));
-
-
 
 PFont f;
 
