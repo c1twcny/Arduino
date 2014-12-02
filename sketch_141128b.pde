@@ -15,27 +15,33 @@ Note:
     tarray[2] -> Z-axis acceleration
     tarray[3] -> magnetic heading
     tarray[4] -> IR distance measurement
+    tarray[5] -> X-axis gyro
+    tarray[6] -> Y-axis gyro
+    tarray[7] -> Z-axis gyro
 *******************************************************************************************/
 
 import processing.serial.*;
 Serial myPort;
 
-int tnumValues= 5; // total inputs <acc-x, acc-y, acc-z, magn-heading, IR-distance>
+int tnumValues= 8; // total inputs <acc-x, acc-y, acc-z, magn-heading, IR-distance>
 int numValues = 3; // acceleration on X, Y & Z
 float[] tarray     = new float[tnumValues];
-float[] values     = new float[numValues];
-float[] minACC     = new float[numValues];
-float[] maxACC     = new float[numValues];
-color[] valColor   = new color[numValues];
-String[] str       = new String[numValues];
+float[] values     = new float[numValues];  //acceleration
+float[] minACC     = new float[numValues];  //acceleration
+float[] maxACC     = new float[numValues];  //acceleration
+color[] valColor   = new color[numValues];  //acceleration
+String[] str       = new String[numValues]; //acceleration
 float partH;
 
 // compass heading panel
 float magnHEADING = 0.0;
 float deltaX, deltaY;
-int xMagn = 500; // compass instrumentation panel center position X
+int xMagn = 450; // compass instrumentation panel center position X
 int yMagn = 100; // compass instrumentation panel center position Y
 int diameterMagnPanel = 100;
+int diameterMagnPanelO= 145;
+float xOuterR45 = 0.5*diameterMagnPanelO*cos(radians(45));
+float yOuterR45 = 0.5*diameterMagnPanelO*sin(radians(45));
 
 // acceleration axis parameters
 int xPosI = 20;
@@ -47,8 +53,8 @@ float lengthScaling = 0.5;
 
 // Sharp IR sensor panel
 char algo = 'l';
-int xIR = 500;
-int yIR = yMagn + int(diameterMagnPanel*2);
+int xIR = xMagn;
+int yIR = yMagn + int(diameterMagnPanel*2.1);
 int diameterIRPanel = 200;
 float distIR = 0.0;
 float distIRMax = 200.0; // limit the maximum distance to 200 cm
@@ -62,7 +68,6 @@ float scaling100 = 0.5;  // 100.0/200.0
 float scaling050 = 0.25; // 50.0/200.0
 float deltaXIR = diameterIRPanel*0.5*cos(radians(30.0));
 float deltaYIR = diameterIRPanel*0.5*sin(radians(30.0));
-
 PFont f;
 
 void setup() {
@@ -97,7 +102,6 @@ void setup() {
 
 void draw() {
   // nothing happens in draw...all happens in serialEvent()
-
   textFont(f, 12);
 }
 
@@ -110,8 +114,10 @@ void serialEvent (Serial myPort) {
       values[i] = tarray[i];
       print(values[i]);print('\t');
     }
-    print(tarray[3]); print('\t');
-    println(tarray[4]);
+    for (int i = numValues; i < tnumValues-1; i++) {
+      print(tarray[i]); print('\t');
+    }
+    println(tarray[tnumValues-1]);
     
     for (int i=0; i < numValues; i++) {
 
@@ -161,37 +167,53 @@ void serialEvent (Serial myPort) {
          circule should be less or equal of the larger circle. In this case the total
          length is 35 + 8/2 = 39, close to 40 which is the radius of a large circle */ 
           
-      deltaX = (diameterMagnPanel/2 - 5)*cos(radians(tarray[3]+90));
+      deltaX = -(diameterMagnPanel/2 - 5)*cos(radians(tarray[3]+90));
       deltaY = -(diameterMagnPanel/2 - 5)*sin(radians(tarray[3]+90));
       noFill();
-      ellipse(xMagn,yMagn, diameterMagnPanel, diameterMagnPanel);
+      ellipse(xMagn, yMagn, diameterMagnPanel, diameterMagnPanel);
+      ellipse(xMagn, yMagn, diameterMagnPanelO, diameterMagnPanelO);
       fill(0);
       line(xMagn, yMagn, xMagn+deltaX, yMagn+deltaY);
       fill(255,0,0);
       ellipse(xMagn+deltaX, yMagn+deltaY, diameterMagnPanel/10, diameterMagnPanel/10);
        
       fill(255);
-      rect(xMagn+diameterMagnPanel/2+30, yMagn+10, 50, -20);
+      rect(xMagn+diameterMagnPanel/2+50, yMagn-40, 50, -20);
       fill(0);
       textAlign(LEFT);
-      text("Heading", xMagn+diameterMagnPanel/2+30, yMagn-15);
+      text("Heading", xMagn+diameterMagnPanel/2+50, yMagn-65);
       if (tarray[3] > 360) {
         tarray[3] = 360.0;
       }
+      //add compass labels: "N", "E", "S" & "W" and degrees
       textAlign(LEFT);
-      text(tarray[3], xMagn+diameterMagnPanel/2+30, yMagn+3);
+      text(tarray[3], xMagn+diameterMagnPanel/2+50, yMagn-45);
       textAlign(CENTER);
       text("N", xMagn, yMagn-diameterMagnPanel/2-10);
+      text("0", xMagn, yMagn-diameterMagnPanelO/2-5);
       line(xMagn, yMagn-diameterMagnPanel/2-5, xMagn, yMagn-diameterMagnPanel/2+5);
       textAlign(LEFT, CENTER);
       text("W", xMagn-diameterMagnPanel/2-20, yMagn);
+      text("270", xMagn-diameterMagnPanelO/2-25, yMagn);
       line(xMagn-diameterMagnPanel/2-5, yMagn, xMagn-diameterMagnPanel/2+5, yMagn);
       textAlign(CENTER);
-      text("S", xMagn, yMagn+diameterMagnPanel/2+23);
+      text("S", xMagn, yMagn+diameterMagnPanel/2+20);
+      text("180", xMagn, yMagn+diameterMagnPanelO/2+15);
       line(xMagn, yMagn+diameterMagnPanel/2-5, xMagn, yMagn+diameterMagnPanel/2+5);
       textAlign(LEFT, CENTER);
       text("E", xMagn+diameterMagnPanel/2+10, yMagn);
+      text("90", xMagn+diameterMagnPanelO/2+5, yMagn);
       line(xMagn+diameterMagnPanel/2-5, yMagn, xMagn+diameterMagnPanel/2+5, yMagn);
+      
+      //add additional compass labels
+      textAlign(LEFT, CENTER);
+      text("45",xMagn+xOuterR45+5, yMagn-yOuterR45);
+      textAlign(LEFT, CENTER);
+      text("135",xMagn+xOuterR45, yMagn+yOuterR45);
+      textAlign(RIGHT, CENTER);
+      text("225",xMagn-xOuterR45, yMagn+yOuterR45);
+      textAlign(RIGHT, CENTER);
+      text("315",xMagn-xOuterR45-5, yMagn-yOuterR45);
       
       /******************************************************************************
       IR distance sensor instrumentation panel
@@ -225,7 +247,6 @@ void serialEvent (Serial myPort) {
       stroke(0);
       rect(xIR-6, yIR-10, 12, 20);
         
-      
       // draw horizontal and vertical axes
       fill(200);
       stroke(200);
@@ -244,8 +265,7 @@ void serialEvent (Serial myPort) {
       } else if (tarray[4] >= 200) {
         tarray[4] = 200;
       }
-      ellipse(xIR, yIR-int(tarray[4])/2, 2, 2);
-   
+      ellipse(xIR, yIR-int(tarray[4])/2, 1, 1);   
       
     } //for (int i=0; i < numValues; i++)
      
