@@ -12,12 +12,12 @@ To convert to gauss, the magnetic output needs to multiplied by 0.16*1e-3.
 See LSM303D datasheet (p.11) for more detail.
 
 L3GD20H:
-Measurement range (dps)    Sensitivity (mdps/digit
+Measurement range (dps)    Sensitivity (mdps/digit)
 +/- 245                    8.75
 +/- 500                    17.50
 +/- 2000                   70.00
 
-call writeReg() function to change the measurement rante 7 sensitivity of gyro;
+call writeReg() function to change the measurement range of sensitivity of gyro;
 Example 1:
 gyro.writeReg(L3G_CTRL_REG4, 0b00110000) -> change the setting to +/- 2000 dps.
 0b00000000 -> +/- 245 dps; default value
@@ -27,9 +27,17 @@ gyro.writeReg(L3G_CTRL_REG4, 0b00110000) -> change the setting to +/- 2000 dps.
 
 Example 2:
 If you are running at the scale of +/- 2000 dps, then a reading of 100 from the
-sensor would indicates (70.00*1e-3) * 100 degrees/second rotation.
+sensor would indicates (70.00*1e-3) * 100 degrees/second rotation (angular velocity)
 If you are running at the scale of +/- 500 dps, the a reading of 100 would indicates
 (17.50*1e-3) * 100 degrees/second rotation.
+Note:
+(1) positive digital output: counter-clockwise rotation when looking at the axis (see data sheet p.7)
+(2) Sensitivity # might be different if we use the data from "measurement range" directly. For example, at +/- 500
+    the sensitivity is: (500*2) / (2^16) ~ 15.26
+(3) For ZumoBot, the yaw (z-axis) is the only measurement one is interested.
+(4) Roll (x-axis) and pitch (y-axis) will be plotted, but not used for any course correction.
+(5) If ZumBot doesn't make too much of sudden turn, then default sensitivity (8.75 mdps/digit) might be sufficient
+
 
 IR sensor:
 The Sharp IR sensor (GP2Y0A02YK) detection range is from 20cm to 150cm
@@ -97,7 +105,7 @@ void setup()
     while(1);
   }
   gyro.enableDefault();
-  gyro.writeReg(L3G_CTRL_REG4, 0b00000000);
+  gyro.writeReg(L3G_CTRL_REG4, 0b00000000); //here the default sensitivity 8.75 mdps/digit is used
   for (int n=0; n < sampleNum; n++) {
     gyro.read();
     dc_offset += (int)gyro.g.z;
