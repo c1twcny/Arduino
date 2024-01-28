@@ -1,7 +1,9 @@
 Arduino codes 
 =======
+Update (Y2024)
+This directory contains generic and simple Arduino test codes.
 
-This directory contains Arduino codes for testing: 
+It used to contain Arduino codes for testing: 
 (1) Pololu ZumoBot accelerometer & magnetometer features/functions.
 (2) Sharp IR sensor (model GP2Y0A02Y) testing.
 (3) Processing sketch used for visualizing accelerometer/magnetometer outputs from ZumoBot.
