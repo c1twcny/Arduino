@@ -26,15 +26,18 @@ void setup() {
 }
 
 void loop() {
-  for (pos = 30; pos <= 150; pos += 1) { // goes from 0 degrees to 180 degrees
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+
+    // perform ultrasonic scan
     long duration, inches, cm;
     pinMode(pingPin, OUTPUT);
     digitalWrite(pingPin, LOW);
     delayMicroseconds(5);
     digitalWrite(pingPin, HIGH);
-    delayMicroseconds(10);
+    delayMicroseconds(5);
     digitalWrite(pingPin, LOW);
     pinMode(pingPin, INPUT);
     duration = pulseIn(pingPin, HIGH);
@@ -45,18 +48,20 @@ void loop() {
     Serial.print(cm);
     Serial.print("cm, ");
     Serial.println();
-
-    delay(20);                       // waits 15ms for the servo to reach the position
   }
-  delay(50);
-  for (pos = 150; pos >= 30; pos -= 1) { // goes from 180 degrees to 0 degrees
+
+  delay(15);
+
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(15);                       // waits 15ms for the servo to reach the position
+
     long duration, inches, cm;
     pinMode(pingPin, OUTPUT);
     digitalWrite(pingPin, LOW);
     delayMicroseconds(5);
     digitalWrite(pingPin, HIGH);
-    delayMicroseconds(10);
+    delayMicroseconds(5);
     digitalWrite(pingPin, LOW);
     pinMode(pingPin, INPUT);
     duration = pulseIn(pingPin, HIGH);
@@ -67,8 +72,6 @@ void loop() {
     Serial.print(cm);
     Serial.print("cm, ");
     Serial.println();
-
-    delay(20);                       // waits 15ms for the servo to reach the position
   }
-  delay(50);
+  delay(15);
 }
